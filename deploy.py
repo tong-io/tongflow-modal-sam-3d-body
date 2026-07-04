@@ -50,7 +50,9 @@ image = (
     modal.Image.from_registry(
         "nvidia/cuda:12.8.1-devel-ubuntu22.04", add_python="3.11"
     )
-    .apt_install("git", "libgl1", "libglib2.0-0")
+    # clang: Modal's add_python is clang-built, so distutils links extension
+    # modules (detectron2's _C) with `clang++`.
+    .apt_install("git", "clang", "libgl1", "libglib2.0-0")
     .env({"TORCH_CUDA_ARCH_LIST": "8.6;8.9;9.0"})
     .pip_install(
         "torch==2.7.1",
@@ -85,6 +87,10 @@ image = (
         "huggingface_hub",
         "trimesh",
     )
+    # wheel/ninja must predate detectron2: --no-build-isolation reuses the
+    # ambient env, and setuptools errors with "invalid command 'bdist_wheel'"
+    # without them.
+    .pip_install("wheel", "setuptools", "ninja")
     .pip_install(
         "git+https://github.com/facebookresearch/detectron2.git@a1ce2f9",
         extra_options="--no-build-isolation --no-deps",
