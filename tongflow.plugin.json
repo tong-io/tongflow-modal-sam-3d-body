@@ -1,0 +1,26 @@
+{
+    "env": [
+        {
+            "key": "MODAL_TOKEN_ID",
+            "required": true,
+            "description": "Modal token id",
+            "url": "https://modal.com/settings/tokens"
+        },
+        {
+            "key": "MODAL_TOKEN_SECRET",
+            "required": true,
+            "description": "Modal token secret (paired with MODAL_TOKEN_ID)"
+        },
+        {
+            "key": "HF_TOKEN",
+            "required": true,
+            "description": "Hugging Face token of an account granted access to facebook/sam-3d-body-dinov3",
+            "url": "https://huggingface.co/facebook/sam-3d-body-dinov3"
+        },
+        {
+            "key": "TONGFLOW_MODAL_CALL_TIMEOUT_S",
+            "default": "2400",
+            "description": "Max seconds to wait for a Modal call"
+        }
+    ]
+}
