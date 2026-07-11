@@ -1,7 +1,7 @@
 {
     "plugin": {
         "name": "SAM 3D Body",
-        "description": "Single-image full-body human mesh recovery with Meta SAM 3D Body (GLB output).",
+        "description": "Meta SAM 3D Body: single-image full-body human mesh recovery (GLB) and video motion capture (animated MHR character GLB).",
         "icon": "/plugins/tongflow-modal-sam-3d-body.svg"
     },
     "env": [

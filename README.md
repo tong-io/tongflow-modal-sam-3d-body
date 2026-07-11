@@ -5,6 +5,7 @@ Official [TongFlow](https://github.com/tong-io/tongflow) plugin. Single-image fu
 ## Capabilities
 
 - **Image → 3D** (`image-gen-model`) — recover the full-body 3D mesh (body, hands, feet; MHR parametric rig) of every person in a photo. People are detected automatically (ViTDet-H) and placed in a shared scene by their predicted camera translation; the output is one GLB.
+- **Video motion capture** (`video-gen-model`) — monocular video → animated **MHR character** GLB: per-frame full inference (body + hand decoders), One-Euro temporal smoothing, single subject (largest person, IoU-tracked). The upstream head's face-expression and jaw branches are experimentally unlocked and exported as glTF morph-target/joint animation — check the `mocap: expr stats` task log and set `MOCAP_EXPR=0` if they turn out untrained. Requires the MHR character bundle on the shared volume (`modal run extract_mhr.py::extract` once). Plays in the TongFlow model node; imports as a skinned armature in Blender.
 
 ## Credentials
 
