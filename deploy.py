@@ -90,6 +90,11 @@ image = (
         "pycocotools",
         "huggingface_hub",
         "trimesh",
+        # detectron2 is installed with --no-deps below; these are its runtime
+        # dependencies not otherwise pulled in.
+        "cloudpickle",
+        "tabulate",
+        "omegaconf",
     )
     # wheel/ninja must predate detectron2: --no-build-isolation reuses the
     # ambient env, and setuptools errors with "invalid command 'bdist_wheel'"
