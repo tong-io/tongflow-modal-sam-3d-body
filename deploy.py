@@ -110,7 +110,7 @@ image = (
         extra_options="--no-build-isolation --no-deps",
     )
     .pip_install("git+https://github.com/microsoft/MoGe.git")
-    .pip_install("tongflow==0.2.13", "fastapi[standard]")
+    .pip_install("tongflow==0.2.16", "fastapi[standard]")
     .run_commands(
         f"git clone {REPO_URL} {REPO_DIR}",
         f"git -C {REPO_DIR} checkout {REPO_REV}",
