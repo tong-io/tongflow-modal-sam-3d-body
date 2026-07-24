@@ -32,6 +32,11 @@ from tongflow.node_slots import NodeSlots
 from tongflow.protocol import asset, prompt_media_to_bytes
 from tongflow.slots import node_slot
 
+# Slots this plugin is the default implementation of: the node picker lists
+# it first and a newly added node preselects it. Read statically by the
+# scanner (never executed), so any SDK version imports this file fine.
+TONGFLOW_DEFAULT_SLOTS = ["video-gen-model"]
+
 REPO_URL = "https://github.com/facebookresearch/sam-3d-body.git"
 # Pin the upstream revision so redeploys are reproducible (main moves).
 REPO_REV = "b5c765a0d89d789985e186d396315e7590887b94"
