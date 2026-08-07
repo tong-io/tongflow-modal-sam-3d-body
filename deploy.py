@@ -156,7 +156,7 @@ with image.imports():
     volumes={"/models": volume},
     secrets=[secrets],
     timeout=3600,
-    scaledown_window=5,
+    scaledown_window=2,
 )
 class Inference:
     @modal.enter()
