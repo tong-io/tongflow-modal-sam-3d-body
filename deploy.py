@@ -30,7 +30,34 @@ from tongflow.models.image_gen_model import ImageGenModelInput, ImageGenModelOut
 from tongflow.models.video_gen_model import VideoGenModelInput, VideoGenModelOutput
 from tongflow.node_slots import NodeSlots
 from tongflow.protocol import asset, prompt_media_to_bytes
-from tongflow.slots import node_slot
+from tongflow.slots import current_params, node_slot
+
+
+def _adv(name: str, default):
+    """Advanced-section override (``TONGFLOW_SLOT_PARAMS``) or the plugin default."""
+    v = current_params().get(name)
+    if v is None:
+        return default
+    if isinstance(default, bool):
+        return bool(v)
+    if isinstance(default, int):
+        return int(v)
+    if isinstance(default, float):
+        return float(v)
+    return v
+
+# Per-run knobs offered under the node's collapsed "Advanced" section.
+# Pure literal (the platform scanner reads it by AST, never imports this
+# module). Values reach the handlers via current_params(); an untouched
+# control is absent there and falls back to the plugin default.
+TONGFLOW_SLOT_PARAMS = {
+    "image-gen-model": {
+        "bbox_threshold": {"type": "number", "default": 0.5, "min": 0.1, "max": 0.9, "step": 0.05, "label": "Person detection threshold"},
+    },
+    "video-gen-model": {
+        "bbox_threshold": {"type": "number", "default": 0.5, "min": 0.1, "max": 0.9, "step": 0.05, "label": "Person detection threshold"},
+    },
+}
 
 # Slots this plugin is the default implementation of: the node picker lists
 # it first and a newly added node preselects it. Read statically by the
@@ -110,7 +137,7 @@ image = (
         extra_options="--no-build-isolation --no-deps",
     )
     .pip_install("git+https://github.com/microsoft/MoGe.git")
-    .pip_install("tongflow==0.2.21", "fastapi[standard]")
+    .pip_install("tongflow==0.3.3", "fastapi[standard]")
     .run_commands(
         f"git clone {REPO_URL} {REPO_DIR}",
         f"git -C {REPO_DIR} checkout {REPO_REV}",
@@ -194,7 +221,7 @@ class Inference:
             rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
 
             outputs = self.estimator.process_one_image(
-                rgb, bbox_thr=BBOX_THRESHOLD
+                rgb, bbox_thr=_adv("bbox_threshold", BBOX_THRESHOLD)
             )
             if not outputs:
                 raise RuntimeError("no person detected in the image")
@@ -237,7 +264,7 @@ class Inference:
         try:
             video = prompt_media_to_bytes(input.video)
             data = mocap_pipeline.capture(
-                self.estimator, video, bbox_thr=BBOX_THRESHOLD, progress=print
+                self.estimator, video, bbox_thr=_adv("bbox_threshold", BBOX_THRESHOLD), progress=print
             )
         except Exception as e:
             return VideoGenModelOutput(
